@@ -60,10 +60,10 @@ func GetVacancies(vacanciesName string, industry, area, professionalRole string)
 }
 
 type Vacancy struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-	//Description string `json:"description"`
-	Employer struct {
+	Id          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Employer    struct {
 		Id   string `json:"id,omitempty"`
 		Name string `json:"name,omitempty"`
 	} `json:"employer"`
@@ -75,7 +75,7 @@ type Vacancy struct {
 		Currency string `json:"currency,omitempty"`
 		From     int    `json:"from,omitempty"`
 		To       int    `json:"to,omitempty"`
-	}
+	} `json:"salary"`
 }
 
 func GetVacancy(vacancyId string) (Vacancy, error) {
