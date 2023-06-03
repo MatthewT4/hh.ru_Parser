@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -59,10 +60,10 @@ func GetVacancies(vacanciesName string, industry, area, professionalRole string)
 }
 
 type Vacancy struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Employer    struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+	//Description string `json:"description"`
+	Employer struct {
 		Id   string `json:"id,omitempty"`
 		Name string `json:"name,omitempty"`
 	} `json:"employer"`
@@ -82,16 +83,11 @@ func GetVacancy(vacancyId string) (Vacancy, error) {
 		Timeout: 5 * time.Second,
 	}
 
-	req, err := http.NewRequest("GET", url+"/vacancy", nil)
+	req, err := http.NewRequest("GET", url+fmt.Sprintf("/vacancies/%v", vacancyId), nil)
 
 	if err != nil {
 		return Vacancy{}, err
 	}
-
-	q := req.URL.Query()
-	q.Add("vacancy_id", vacancyId)
-
-	req.URL.RawQuery = q.Encode()
 
 	resp, err := client.Do(req)
 	if err != nil {
