@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -76,9 +77,23 @@ type Vacancy struct {
 		From     int    `json:"from,omitempty"`
 		To       int    `json:"to,omitempty"`
 	} `json:"salary"`
+	KeySkills []struct {
+		Name string `json:"name"`
+	} `json:"key_skills"`
+	Schedule struct {
+		Name string `json:"name"`
+	} `json:"schedule"`
 }
 
-func GetVacancy(vacancyId string) (Vacancy, error) {
+func AsyncGetVacancy(vacancyId string, result chan Vacancy, wg *sync.WaitGroup) {
+	vac, err := getVacancy(vacancyId)
+	if err == nil {
+		result <- vac
+	}
+	wg.Done()
+}
+
+func getVacancy(vacancyId string) (Vacancy, error) {
 	client := &http.Client{
 		Timeout: 5 * time.Second,
 	}
